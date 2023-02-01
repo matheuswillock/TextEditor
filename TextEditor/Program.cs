@@ -1,4 +1,4 @@
-﻿namespace TextEditor
+namespace TextEditor2
 {
     internal class Program
     {
@@ -11,75 +11,85 @@
         {
             Console.Clear();
             Console.WriteLine(
-                    "O que você deseja fazer?\n" +
-                    "1 - Abrir um arquivo\n" +
-                    "2 - Editar um arquivo\n" +
-                    "0 - Sair"
+                    "O que você deseja fazer?\n\n" +
+                    "1 - Abrir um arquivo.\n" +
+                    "2 - Editar um arquivo.\n" +
+                    "0 - sair.\n"
                 );
 
-            short userOption = short.Parse(Console.ReadLine());
+            var option = Console.ReadLine() ?? "";
 
-            switch (userOption)
+            switch (option)
             {
-                case 0: System.Environment.Exit(0); break;
-                case 1: OpenFile(); break;
-                case 2: EditFile(); break;
-                default: Menu(); break;
+                case "0": System.Environment.Exit(0);
+                    break;
+                case "1": OpenFile();
+                    break;
+                case "2": EditFile();
+                    break;
+                default: Menu();
+                    break;
             }
-
         }
 
-        static void OpenFile()
-        {
+        static void OpenFile() { 
             Console.Clear();
             Console.WriteLine("Qual o caminho do arquivo?");
-            string path = Console.ReadLine();
+
+            string path = Console.ReadLine() ?? "";
+
+            if (path == "" || path == " ") OpenFile();
 
             using (var file = new StreamReader(path))
-            { 
+            {
+                Console.Clear();
                 string text = file.ReadToEnd();
-                Console.WriteLine(text);
+                Console.WriteLine($"{path}\n\n{text}");
             }
 
-            Console.WriteLine("");
+            Console.WriteLine("Tecle enter para sair.");
             Console.ReadLine();
+
             Menu();
+
         }
 
-        static void EditFile()
-        {
+        static void EditFile() {
             string userText = "";
 
             Console.Clear();
-            Console.WriteLine(
-                    "Digite o seu texto abaixo (ESC para sair)\n" +
-                    "----------------------------------------------"
-                );
-            
-            do
-            {
+            Console.WriteLine("Escreva o seu texto abaixo:\n\n -------------------------------- \n");
+
+            do {
                 userText += Console.ReadLine() + Environment.NewLine;
             }
             while (Console.ReadKey().Key != ConsoleKey.Escape);
 
-            SaveFile(userText);
-        }   
+            Console.WriteLine();
 
-        static void SaveFile(string text)
+            SaveFile(userText);
+        }
+
+        static void SaveFile(string text) 
         {
             Console.Clear();
-            Console.WriteLine(" Qual caminho deseja salvar o arquivo?");
-            var path = Console.ReadLine();
+            Console.WriteLine("QQual caminho deseja salvar o arquivo?");
 
-            using (var file = new StreamWriter(path)) 
+            var path =  Console.ReadLine() ?? "";
+
+            if (path == "" || path == " ") SaveFile(text);
+
+            using (var file = new StreamWriter(path))
             { 
                 file.Write(text);
             }
 
-            Console.WriteLine($"Arquivo {path} salvo com sucesso!");
+            Console.WriteLine($"Arquivo {path} salvo com sucesso");
+
+            Console.WriteLine("\n\nTecle enter para sair.");
             Console.ReadLine();
+
             Menu();
         }
-
     }
 }
